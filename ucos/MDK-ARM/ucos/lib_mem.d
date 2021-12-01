@@ -1,0 +1,11 @@
+ucos\lib_mem.o: uC-LIB\lib_mem.c
+ucos\lib_mem.o: .\uC-LIB\lib_mem.h
+ucos\lib_mem.o: .\uC-CPU\ARM-Cortex-M3\RealView\cpu.h
+ucos\lib_mem.o: .\uC-CPU\cpu_def.h
+ucos\lib_mem.o: .\uC-CONFIG\cpu_cfg.h
+ucos\lib_mem.o: .\uC-CPU\cpu_core.h
+ucos\lib_mem.o: .\uC-LIB\lib_def.h
+ucos\lib_mem.o: .\uC-LIB\lib_mem.h
+ucos\lib_mem.o: .\uC-LIB\lib_str.h
+ucos\lib_mem.o: .\uC-LIB\lib_ascii.h
+ucos\lib_mem.o: .\uC-CONFIG\lib_cfg.h
