@@ -16,23 +16,27 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-/* ÈÎÎñÓÅÏÈ¼¶ */
+/* ä»»åŠ¡ä¼˜å…ˆçº§ */
 #define START_TASK_PRIO		3
 #define LED0_TASK_PRIO		4
 #define MSG_TASK_PRIO		5
+#define LED1_TASK_PRIO		6
 
-/* ÈÎÎñ¶ÑÕ»´óĞ¡	*/
+/* ä»»åŠ¡å †æ ˆå¤§å°	*/
 #define START_STK_SIZE 		64
 #define LED0_STK_SIZE 		64
-#define MSG_STK_SIZE 		64//ÈÎÎñ¶Ñ´óĞ¡¹ı´ó»á±¨´í£¬¿ÉÒÔÊÔ×Å¸ÄĞ¡Ò»µã
+#define LED1_STK_SIZE 		64
+#define MSG_STK_SIZE 		64//ä»»åŠ¡å †å¤§å°è¿‡å¤§ä¼šæŠ¥é”™ï¼Œå¯ä»¥è¯•ç€æ”¹å°ä¸€ç‚¹
 
-/* ÈÎÎñÕ» */	
+/* ä»»åŠ¡æ ˆ */	
 CPU_STK START_TASK_STK[START_STK_SIZE];
 CPU_STK LED0_TASK_STK[LED0_STK_SIZE];
+CPU_STK LED1_TASK_STK[LED1_STK_SIZE];
 CPU_STK MSG_TASK_STK[MSG_STK_SIZE];
-/* ÈÎÎñ¿ØÖÆ¿é */
+/* ä»»åŠ¡æ§åˆ¶å— */
 OS_TCB StartTaskTCB;
 OS_TCB Led0TaskTCB;
+OS_TCB Led1TaskTCB;
 OS_TCB MsgTaskTCB;
 /* USER CODE END PD */
 
@@ -45,11 +49,12 @@ OS_TCB MsgTaskTCB;
 
 /* USER CODE BEGIN PV */
 
-/* ÈÎÎñº¯Êı¶¨Òå */
+/* ä»»åŠ¡å‡½æ•°å®šä¹‰ */
 void start_task(void *p_arg);
 static  void  AppTaskCreate(void);
 static  void  AppObjCreate(void);
-static  void  led_pc13(void *p_arg);
+static  void  led_pc15(void *p_arg);
+static  void  led_pc14(void *p_arg);
 static  void  send_msg(void *p_arg);
 /* USER CODE END PV */
 
@@ -110,9 +115,9 @@ int main(void)
 	OSInit(&err);
   HAL_Init();
 	SystemClock_Config();
-	//MX_GPIO_Init(); Õâ¸öÔÚBSPµÄ³õÊ¼»¯ÀïÒ²»á³õÊ¼»¯
+	//MX_GPIO_Init(); è¿™ä¸ªåœ¨BSPçš„åˆå§‹åŒ–é‡Œä¹Ÿä¼šåˆå§‹åŒ–
   MX_USART1_UART_Init();	
-	/* ´´½¨ÈÎÎñ */
+	/* åˆ›å»ºä»»åŠ¡ */
 	OSTaskCreate((OS_TCB     *)&StartTaskTCB,                /* Create the start task                                */
 				 (CPU_CHAR   *)"start task",
 				 (OS_TASK_PTR ) start_task,
@@ -126,7 +131,7 @@ int main(void)
 				 (void       *) 0,
 				 (OS_OPT      )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
 				 (OS_ERR     *)&err);
-	/* Æô¶¯¶àÈÎÎñÏµÍ³£¬¿ØÖÆÈ¨½»¸øuC/OS-III */
+	/* å¯åŠ¨å¤šä»»åŠ¡ç³»ç»Ÿï¼Œæ§åˆ¶æƒäº¤ç»™uC/OS-III */
 	OSStart(&err);            /* Start multitasking (i.e. give control to uC/OS-III). */
                
 }
@@ -144,23 +149,23 @@ void start_task(void *p_arg)
   //Mem_Init();                                                 /* Initialize Memory Management Module */
 
 #if OS_CFG_STAT_TASK_EN > 0u
-   OSStatTaskCPUUsageInit(&err);  		//Í³¼ÆÈÎÎñ                
+   OSStatTaskCPUUsageInit(&err);  		//ç»Ÿè®¡ä»»åŠ¡                
 #endif
 	
-#ifdef CPU_CFG_INT_DIS_MEAS_EN			//Èç¹ûÊ¹ÄÜÁË²âÁ¿ÖĞ¶Ï¹Ø±ÕÊ±¼ä
+#ifdef CPU_CFG_INT_DIS_MEAS_EN			//å¦‚æœä½¿èƒ½äº†æµ‹é‡ä¸­æ–­å…³é—­æ—¶é—´
     CPU_IntDisMeasMaxCurReset();	
 #endif
 
-#if	OS_CFG_SCHED_ROUND_ROBIN_EN  		//µ±Ê¹ÓÃÊ±¼äÆ¬ÂÖ×ªµÄÊ±ºò
-	 //Ê¹ÄÜÊ±¼äÆ¬ÂÖ×ªµ÷¶È¹¦ÄÜ,Ê±¼äÆ¬³¤¶ÈÎª1¸öÏµÍ³Ê±ÖÓ½ÚÅÄ£¬¼È1*5=5ms
+#if	OS_CFG_SCHED_ROUND_ROBIN_EN  		//å½“ä½¿ç”¨æ—¶é—´ç‰‡è½®è½¬çš„æ—¶å€™
+	 //ä½¿èƒ½æ—¶é—´ç‰‡è½®è½¬è°ƒåº¦åŠŸèƒ½,æ—¶é—´ç‰‡é•¿åº¦ä¸º1ä¸ªç³»ç»Ÿæ—¶é’ŸèŠ‚æ‹ï¼Œæ—¢1*5=5ms
 	OSSchedRoundRobinCfg(DEF_ENABLED,1,&err);  
 #endif		
 	
-	OS_CRITICAL_ENTER();	//½øÈëÁÙ½çÇø
-	/* ´´½¨LED0ÈÎÎñ */
+	OS_CRITICAL_ENTER();	//è¿›å…¥ä¸´ç•ŒåŒº
+	/* åˆ›å»ºLED0ä»»åŠ¡ */
 	OSTaskCreate((OS_TCB 	* )&Led0TaskTCB,		
-				 (CPU_CHAR	* )"led_pc13", 		
-                 (OS_TASK_PTR )led_pc13, 			
+				 (CPU_CHAR	* )"led_pc14", 		
+                 (OS_TASK_PTR )led_pc14, 			
                  (void		* )0,					
                  (OS_PRIO	  )LED0_TASK_PRIO,     
                  (CPU_STK   * )&LED0_TASK_STK[0],	
@@ -172,7 +177,21 @@ void start_task(void *p_arg)
                  (OS_OPT      )OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
                  (OS_ERR 	* )&err);				
 				 
-	/* ´´½¨LED1ÈÎÎñ */
+/* åˆ›å»ºLED1ä»»åŠ¡ */
+	OSTaskCreate((OS_TCB 	* )&Led1TaskTCB,		
+				 (CPU_CHAR	* )"led_pc15", 		
+                 (OS_TASK_PTR )led_pc15, 			
+                 (void		* )0,					
+                 (OS_PRIO	  )LED0_TASK_PRIO,     
+                 (CPU_STK   * )&LED1_TASK_STK[0],	
+                 (CPU_STK_SIZE)LED1_STK_SIZE/10,	
+                 (CPU_STK_SIZE)LED1_STK_SIZE,		
+                 (OS_MSG_QTY  )0,					
+                 (OS_TICK	  )0,					
+                 (void   	* )0,					
+                 (OS_OPT      )OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
+                 (OS_ERR 	* )&err);	
+	/* åˆ›å»ºsend_msgä»»åŠ¡ */
 	OSTaskCreate((OS_TCB 	* )&MsgTaskTCB,		
 				 (CPU_CHAR	* )"send_msg", 		
                  (OS_TASK_PTR )send_msg, 			
@@ -187,16 +206,16 @@ void start_task(void *p_arg)
                  (OS_OPT      )OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR, 
                  (OS_ERR 	* )&err);
 				 
-	OS_TaskSuspend((OS_TCB*)&StartTaskTCB,&err);		//¹ÒÆğ¿ªÊ¼ÈÎÎñ			 
-	OS_CRITICAL_EXIT();	//½øÈëÁÙ½çÇø
+	OS_TaskSuspend((OS_TCB*)&StartTaskTCB,&err);		//æŒ‚èµ·å¼€å§‹ä»»åŠ¡			 
+	OS_CRITICAL_EXIT();	//è¿›å…¥ä¸´ç•ŒåŒº
 }
 /**
-  * º¯Êı¹¦ÄÜ: Æô¶¯ÈÎÎñº¯ÊıÌå¡£
-  * ÊäÈë²ÎÊı: p_arg ÊÇÔÚ´´½¨¸ÃÈÎÎñÊ±´«µİµÄĞÎ²Î
-  * ·µ »Ø Öµ: ÎŞ
-  * Ëµ    Ã÷£ºÎŞ
+  * å‡½æ•°åŠŸèƒ½: å¯åŠ¨ä»»åŠ¡å‡½æ•°ä½“ã€‚
+  * è¾“å…¥å‚æ•°: p_arg æ˜¯åœ¨åˆ›å»ºè¯¥ä»»åŠ¡æ—¶ä¼ é€’çš„å½¢å‚
+  * è¿” å› å€¼: æ— 
+  * è¯´    æ˜ï¼šæ— 
   */
-static  void  led_pc13 (void *p_arg)
+static  void  led_pc14 (void *p_arg)
 {
   OS_ERR      err;
 
@@ -219,21 +238,46 @@ static  void  led_pc13 (void *p_arg)
 
   while (DEF_TRUE)
   {
-		//PB14Ã¿1ÃëÁÁÒ»´Î£¬PB15Ã¿3ÃëÁÁ1´Î
-		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_15,GPIO_PIN_RESET);
+		//PB14æ¯1ç§’äº®ä¸€æ¬¡
 		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_14,GPIO_PIN_RESET);
+		OSTimeDlyHMSM(0, 0, 0, 500,OS_OPT_TIME_HMSM_STRICT,&err);
+		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_14,GPIO_PIN_SET);
+		OSTimeDlyHMSM(0, 0, 0, 500,OS_OPT_TIME_HMSM_STRICT,&err);
+
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+}
+static  void  led_pc15 (void *p_arg)
+{
+  OS_ERR      err;
+
+  (void)p_arg;
+
+  BSP_Init();                                                 /* Initialize BSP functions                             */
+  CPU_Init();
+
+  Mem_Init();                                                 /* Initialize Memory Management Module                  */
+
+#if OS_CFG_STAT_TASK_EN > 0u
+  OSStatTaskCPUUsageInit(&err);                               /* Compute CPU capacity with no task running            */
+#endif
+
+  CPU_IntDisMeasMaxCurReset();
+
+  AppTaskCreate();                                            /* Create Application Tasks                             */
+
+  AppObjCreate();                                             /* Create Application Objects                           */
+
+  while (DEF_TRUE)
+  {
+		//PB15æ¯3ç§’äº®1æ¬¡
+		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_15,GPIO_PIN_RESET);
 		OSTimeDlyHMSM(0, 0, 0, 500,OS_OPT_TIME_HMSM_STRICT,&err);
 		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_15,GPIO_PIN_SET);
-		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_14,GPIO_PIN_SET);
-		OSTimeDlyHMSM(0, 0, 0, 500,OS_OPT_TIME_HMSM_STRICT,&err);
-		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_14,GPIO_PIN_RESET);
-		OSTimeDlyHMSM(0, 0, 0, 500,OS_OPT_TIME_HMSM_STRICT,&err);
-		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_14,GPIO_PIN_SET);
-		OSTimeDlyHMSM(0, 0, 0, 500,OS_OPT_TIME_HMSM_STRICT,&err);
-		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_14,GPIO_PIN_RESET);
-		OSTimeDlyHMSM(0, 0, 0, 500,OS_OPT_TIME_HMSM_STRICT,&err);
-		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_14,GPIO_PIN_SET);
-		OSTimeDlyHMSM(0, 0, 0, 500,OS_OPT_TIME_HMSM_STRICT,&err);
+		OSTimeDlyHMSM(0, 0, 2, 500,OS_OPT_TIME_HMSM_STRICT,&err);
 
     /* USER CODE END WHILE */
 
@@ -264,8 +308,8 @@ static  void  send_msg (void *p_arg)
 
   while (DEF_TRUE)
   {
-			printf("hello world \r\n");
-		OSTimeDlyHMSM(0, 0, 2, 0,OS_OPT_TIME_HMSM_STRICT,&err);//Ã¿2ÃëÊä³ö1´Î
+			printf("hello uc/OS! æ¬¢è¿æ¥åˆ°RTOSå¤šä»»åŠ¡ç¯å¢ƒï¼\r\n");
+		OSTimeDlyHMSM(0, 0, 2, 0,OS_OPT_TIME_HMSM_STRICT,&err);//æ¯2ç§’è¾“å‡º1æ¬¡
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -276,10 +320,10 @@ static  void  send_msg (void *p_arg)
 
 /* USER CODE BEGIN 4 */
 /**
-  * º¯Êı¹¦ÄÜ: ´´½¨Ó¦ÓÃÈÎÎñ
-  * ÊäÈë²ÎÊı: p_arg ÊÇÔÚ´´½¨¸ÃÈÎÎñÊ±´«µİµÄĞÎ²Î
-  * ·µ »Ø Öµ: ÎŞ
-  * Ëµ    Ã÷£ºÎŞ
+  * å‡½æ•°åŠŸèƒ½: åˆ›å»ºåº”ç”¨ä»»åŠ¡
+  * è¾“å…¥å‚æ•°: p_arg æ˜¯åœ¨åˆ›å»ºè¯¥ä»»åŠ¡æ—¶ä¼ é€’çš„å½¢å‚
+  * è¿” å› å€¼: æ— 
+  * è¯´    æ˜ï¼šæ— 
   */
 static  void  AppTaskCreate (void)
 {
@@ -288,10 +332,10 @@ static  void  AppTaskCreate (void)
 
 
 /**
-  * º¯Êı¹¦ÄÜ: uCOSIIIÄÚºË¶ÔÏó´´½¨
-  * ÊäÈë²ÎÊı: ÎŞ
-  * ·µ »Ø Öµ: ÎŞ
-  * Ëµ    Ã÷£ºÎŞ
+  * å‡½æ•°åŠŸèƒ½: uCOSIIIå†…æ ¸å¯¹è±¡åˆ›å»º
+  * è¾“å…¥å‚æ•°: æ— 
+  * è¿” å› å€¼: æ— 
+  * è¯´    æ˜ï¼šæ— 
   */
 static  void  AppObjCreate (void)
 {
