@@ -1,0 +1,10 @@
+nano\idle.o: ../Middlewares/Third_Party/RealThread_RTOS/src/idle.c
+nano\idle.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rthw.h
+nano\idle.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtthread.h
+nano\idle.o: ../RT-Thread/rtconfig.h
+nano\idle.o: ../Middlewares/Third_Party/RealThread_RTOS/finsh/finsh_config.h
+nano\idle.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtdebug.h
+nano\idle.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtdef.h
+nano\idle.o: D:\Keil_5\ARM\ARMCC\Bin\..\include\stdarg.h
+nano\idle.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtservice.h
+nano\idle.o: ../Middlewares/Third_Party/RealThread_RTOS/finsh/finsh_api.h

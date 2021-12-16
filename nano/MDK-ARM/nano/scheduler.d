@@ -1,0 +1,10 @@
+nano\scheduler.o: ../Middlewares/Third_Party/RealThread_RTOS/src/scheduler.c
+nano\scheduler.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtthread.h
+nano\scheduler.o: ../RT-Thread/rtconfig.h
+nano\scheduler.o: ../Middlewares/Third_Party/RealThread_RTOS/finsh/finsh_config.h
+nano\scheduler.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtdebug.h
+nano\scheduler.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtdef.h
+nano\scheduler.o: D:\Keil_5\ARM\ARMCC\Bin\..\include\stdarg.h
+nano\scheduler.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtservice.h
+nano\scheduler.o: ../Middlewares/Third_Party/RealThread_RTOS/finsh/finsh_api.h
+nano\scheduler.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rthw.h

@@ -1,0 +1,17 @@
+nano\msh.o: ../Middlewares/Third_Party/RealThread_RTOS/components/finsh/msh.c
+nano\msh.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtthread.h
+nano\msh.o: ../RT-Thread/rtconfig.h
+nano\msh.o: ../Middlewares/Third_Party/RealThread_RTOS/finsh/finsh_config.h
+nano\msh.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtdebug.h
+nano\msh.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtdef.h
+nano\msh.o: D:\Keil_5\ARM\ARMCC\Bin\..\include\stdarg.h
+nano\msh.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtservice.h
+nano\msh.o: ../Middlewares/Third_Party/RealThread_RTOS/finsh/finsh_api.h
+nano\msh.o: ../Middlewares/Third_Party/RealThread_RTOS/components/finsh/msh.h
+nano\msh.o: ../Middlewares/Third_Party/RealThread_RTOS/finsh/finsh.h
+nano\msh.o: D:\Keil_5\ARM\ARMCC\Bin\..\include\stdio.h
+nano\msh.o: D:\Keil_5\ARM\ARMCC\Bin\..\include\ctype.h
+nano\msh.o: D:\Keil_5\ARM\ARMCC\Bin\..\include\stdlib.h
+nano\msh.o: D:\Keil_5\ARM\ARMCC\Bin\..\include\stdint.h
+nano\msh.o: D:\Keil_5\ARM\ARMCC\Bin\..\include\string.h
+nano\msh.o: ../Middlewares/Third_Party/RealThread_RTOS/finsh/shell.h

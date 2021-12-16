@@ -1,0 +1,10 @@
+nano\mempool.o: ../Middlewares/Third_Party/RealThread_RTOS/src/mempool.c
+nano\mempool.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rthw.h
+nano\mempool.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtthread.h
+nano\mempool.o: ../RT-Thread/rtconfig.h
+nano\mempool.o: ../Middlewares/Third_Party/RealThread_RTOS/finsh/finsh_config.h
+nano\mempool.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtdebug.h
+nano\mempool.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtdef.h
+nano\mempool.o: D:\Keil_5\ARM\ARMCC\Bin\..\include\stdarg.h
+nano\mempool.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtservice.h
+nano\mempool.o: ../Middlewares/Third_Party/RealThread_RTOS/finsh/finsh_api.h

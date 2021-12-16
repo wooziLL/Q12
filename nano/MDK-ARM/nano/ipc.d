@@ -1,0 +1,10 @@
+nano\ipc.o: ../Middlewares/Third_Party/RealThread_RTOS/src/ipc.c
+nano\ipc.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtthread.h
+nano\ipc.o: ../RT-Thread/rtconfig.h
+nano\ipc.o: ../Middlewares/Third_Party/RealThread_RTOS/finsh/finsh_config.h
+nano\ipc.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtdebug.h
+nano\ipc.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtdef.h
+nano\ipc.o: D:\Keil_5\ARM\ARMCC\Bin\..\include\stdarg.h
+nano\ipc.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtservice.h
+nano\ipc.o: ../Middlewares/Third_Party/RealThread_RTOS/finsh/finsh_api.h
+nano\ipc.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rthw.h

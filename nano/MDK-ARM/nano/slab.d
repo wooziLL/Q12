@@ -1,0 +1,10 @@
+nano\slab.o: ../Middlewares/Third_Party/RealThread_RTOS/src/slab.c
+nano\slab.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rthw.h
+nano\slab.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtthread.h
+nano\slab.o: ../RT-Thread/rtconfig.h
+nano\slab.o: ../Middlewares/Third_Party/RealThread_RTOS/finsh/finsh_config.h
+nano\slab.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtdebug.h
+nano\slab.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtdef.h
+nano\slab.o: D:\Keil_5\ARM\ARMCC\Bin\..\include\stdarg.h
+nano\slab.o: ../Middlewares/Third_Party/RealThread_RTOS/include/rtservice.h
+nano\slab.o: ../Middlewares/Third_Party/RealThread_RTOS/finsh/finsh_api.h
